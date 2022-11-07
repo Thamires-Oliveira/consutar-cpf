@@ -1,0 +1,152 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8"/>
+        <title>Formulário CPF </title>
+        
+        <script type="text/javascript">
+            //Adicionando mascara ao imput
+            function mascara(cpf){  
+            if(cpf.value.length == 3)
+					cpf.value = cpf.value + '.';
+			if(cpf.value.length == 7)
+			cpf.value = cpf.value + '.';
+			if(cpf.value.length == 11)
+			cpf.value = cpf.value + '-';			
+			}
+
+            //Validando primeiro digito 
+            function validarCpf( cpf = 0){
+                console.log(cpf);
+                var cpf = cpf.replace(/\.|-/g,"");
+                let soma = 0;
+                x = 10;
+                for(i=0;i<=8;i++){
+                   soma += cpf[i] * x;
+                   x--;
+                }
+                soma = (soma * 10) % 11;
+                if(soma == 10 || soma == 11){
+                    soma = 0;
+                    x = 11;
+                }
+                //checando se o resto do calculo é igual ao digito inserido
+                if(soma != cpf[9]){
+                    return false;
+                }
+
+            //Validando segundo digito
+               
+                for(i=0;i<=9;i++){
+                   soma += cpf[i] * x;
+                   x--;
+                }
+                soma = (soma * 10) % 11;
+                if(soma == 10 || soma == 11){
+                    soma = 0;
+                }
+                console.log("segundo digito: " + soma);
+                console.log(cpf[10]);
+                if(soma != cpf[10]){
+                    console.log("nao deu no segundo");
+                    return false;
+                }
+
+                return true;
+            }
+
+         //adicionando msg de erro
+            var capturando = "";   
+            function error(){  
+            //parando o enviar automatico
+            const form = document.getElementById('myForm');
+            form.addEventListener('submit',(e) => {
+                e.preventDefault()
+            })
+
+            var cpf = document.getElementById('cpf').value;
+             if(validarCpf(cpf)){
+             document.getElementById('error').style.display = "none";
+             document.getElementById("myForm").submit();
+            return true;
+             }else{
+                 document.getElementById('error').style.display = "block";
+                 return false;
+              } 
+         }  
+        </script>
+        <style>
+            body{
+                background-image:url(bgmodal_novembroazul.jpg);
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+            }
+            #myForm{
+                height:100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                /* background-color: #fafafa; */
+                font-family: Montserrat, sans-serif;
+            }
+            .error{
+                color:#FFF;
+                background-color: #F00;
+                display:none;
+                margin-top: 1em;
+                text-align: center;
+            }
+            legend{
+                color:#020101;
+              text-align: left;
+              font-weight: bolder;
+            }
+            fieldset{
+                background-color: #f0f0f0;
+                max-height: 20vh; 
+                position: relative;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                padding-top: 2%;
+                padding-bottom: 2%;
+            }
+           .btn{
+            background-color: #07bebb;
+            color:#FFF;
+            border-radius: 6px;
+            padding: 0.3em;
+            font-size: 0.92em;
+           }
+           #cpf{
+            height: 1.5em;
+            border-radius: 6px;
+            font-size: 1em;
+            padding-left: 0.5em;
+            width: 50%;
+           }
+        </style>
+    </head>
+   <body>
+    <form action="cpf.php" enctype="multipart/form-data" method="POST" id="myForm">
+        <fieldset>
+            <legend>CLIENTE</legend>
+            <span>
+                CPF: <input type="text" id="cpf" name="cpf" size="11" maxlength="19" placeholder="___.___.___-__" onkeypress="mascara(this)">
+            </span>
+            <input type="submit" onclick ="error()" class="btn" value="Enviar">
+            <div class="error" id="error" >
+                Insira um CPF válido!
+            </div>
+            
+
+        </fieldset>
+        
+
+    </form>
+   </body>
+
+
+</html>
+
